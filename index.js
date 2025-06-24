@@ -1,7 +1,7 @@
 let express = require("express")
 let app = express()
 let server = require("http").createServer(app)
-let rooms = [];
+let rooms = new Map();
 
 app.use(express.json())
 let io = require("socket.io")(server)
@@ -15,6 +15,7 @@ function getIPHash(ip) {
 
 
 const { v4: uuidv4 } = require('uuid');
+const { room, playerJoinsRoom } = require("./room");
 
 function generateUserId() {
   return uuidv4(); // returns a UUID v4
@@ -41,8 +42,12 @@ io.on("connection",(client)=>{
   
 
 
-    client.on("mr",(userHash)=>{
+    client.on("mr",(data)=>{
+        console.log(data);
         
+        let userHash = data[0];
+        let username = data[1];
+
         //leave all other rooms
 
         for (const room of client.rooms){
@@ -61,7 +66,16 @@ io.on("connection",(client)=>{
             return
 
         client.join(userHash);
-        client.send("l");
+        let rroom = (rooms).get(userHash);
+        let tempRoom ={};
+        
+        tempRoom = (!rroom) ? {...room} : rroom;
+       
+
+        let d = playerJoinsRoom(userHash,tempRoom,username);
+        (rooms).set(userHash,tempRoom);
+
+        client.send("l",d);
 
         
 
@@ -77,6 +91,8 @@ io.on("connection",(client)=>{
             }
         }
 
+        console.log(data);
+        
         
         //read from data base all the other players info of this room
         //store the player name on firebase room details {hashedIP : {username, cards}} 
@@ -90,12 +106,16 @@ io.on("connection",(client)=>{
         */
         
         //then send the data to all the other clients that someone is there and this is their name
-        io.to(data.split(",")[0]).emit("jr",data.split(",")[1]);
+        // io.to(data[0]).emit("jr",data.split(",")[1]);
+
+
         //join the room
-        client.join(data.split(",")[0]);
+        client.join(data[0]);
         //send the other players info to this player regarding their names, the player will decide their
         //turn based on how many players joined before them
-        client.send("n") // n stands for info which contains the other players' names
+        let d = playerJoinsRoom(data[1],rooms.get(data[0]),data[2]);
+        client.send("n",d) // n stands for info which contains the other players' names
+        io.to(data[0]).except(client.id).emit("p",rooms.get(data[0]).p.length,data[2])
 
 
 
