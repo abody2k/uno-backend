@@ -84,13 +84,23 @@ io.on("connection",(client)=>{
         io.to(data.split(",")[0]).emit("jr");
         //join the room
         client.join(data.split(",")[0]);
-        //send the other players info to this player regarding their names
+        //send the other players info to this player regarding their names, the player will decide their
+        //turn based on how many players joined before them
         client.send("n") // n stands for info which contains the other players' names
 
 
 
     });
     
+    client.on("s",(roomID)=>{ // start the game
+
+        //set the current player turn in firebase to 0
+        //let the other players know it started given this playerID
+        io.to(roomID).emit("s");
+
+
+
+    })
 })
 
 server.listen(3000,()=>{
