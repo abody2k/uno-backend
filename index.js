@@ -50,7 +50,7 @@ io.on("connection",(client)=>{
             }
         }
 
-        
+
         
         
         //delete the room data of that user using his hash
@@ -61,15 +61,35 @@ io.on("connection",(client)=>{
 
         client.join(userHash);
         client.send("l");
-        console.log("current rooms a user has joined : ");
-        
-        for (const room of client.rooms){
-            console.log(room);
-            
-        }
+
         
 
-    })
+    });
+
+    client.on("j",(data)=>{ // the second part of the data would be the username
+
+        //leave all other rooms
+
+        for (const room of client.rooms){
+            if (room != client.id){
+                client.leave(room)
+            }
+        }
+
+
+        //read from data base all the other players info of this room
+        //store the player name on firebase room details {username: socketID} io.sockets.sockets.get()
+        
+        //then send the data to all the other clients that someone is there and this is their name
+        io.to(data.split(",")[0]).emit("jr");
+        //join the room
+        client.join(data.split(",")[0]);
+        //send the other players info to this player regarding their names
+        client.send("n") // n stands for info which contains the other players' names
+
+
+
+    });
     
 })
 
