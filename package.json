@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/abody2k/uno-backend/issues"
   },
-  "homepage": "https://github.com/abody2k/uno-backend#readme"
+  "homepage": "https://github.com/abody2k/uno-backend#readme",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1",
+    "uuid": "^11.1.0"
+  }
 }
