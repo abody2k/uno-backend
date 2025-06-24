@@ -1,6 +1,7 @@
 let express = require("express")
 let app = express()
 let server = require("http").createServer(app)
+let rooms = [];
 
 app.use(express.json())
 let io = require("socket.io")(server)
@@ -76,12 +77,20 @@ io.on("connection",(client)=>{
             }
         }
 
-
+        
         //read from data base all the other players info of this room
-        //store the player name on firebase room details {username: socketID} io.sockets.sockets.get()
+        //store the player name on firebase room details {hashedIP : {username, cards}} 
+        
+        // room { current_turn, direction, current_card, playerscards:[hashedIp:[cards]], players:[{name:no of cards}] , playersIDs: {hashedIps}, league {playerwins}}
+
+        /*we store the hashed ip so that every time some loses connection and joins the room again, they have
+        the same ip, they check firebase, provide their ip and if it's there then the player can just join
+        otherwise we need to insert his name and ip in the table to avoid duplications and lost data
+        each player has number of cards as well and it saved within that place
+        */
         
         //then send the data to all the other clients that someone is there and this is their name
-        io.to(data.split(",")[0]).emit("jr");
+        io.to(data.split(",")[0]).emit("jr",data.split(",")[1]);
         //join the room
         client.join(data.split(",")[0]);
         //send the other players info to this player regarding their names, the player will decide their
@@ -108,23 +117,28 @@ io.on("connection",(client)=>{
         // the data contains the card
 
         //save it to firebase
+        
 
         //send it to the other players
         io.to(client.rooms[1]).except(client.id).emit("n",data);
-        // switch (data[0]) {
-        //     case 'b': //it's a black card then the next value is either 4 or a new color
+        //TODO  this logic is used so that when a player comes in they know what cards are there, turn direction,
+        // current card and how many cards are in each player hand
 
-        //         if (data[1]=='4'){
 
-        //         }else{
+        switch (data[0]) {
+            case 'b': //it's a black card then the next value is either 4 or a new color
 
-        //         }
+                if (data[1]=='4'){
+
+                }else{
+
+                }
                 
-        //         break;
+                break;
         
-        //     default:
-        //         break;
-        // }
+            default:
+                break;
+        }
 
     })
 })
