@@ -96,10 +96,82 @@ function numberType() {
 
 
 
-function withdraw(room,userIndex) {
+function withdrawCard(room,userIndex) {
+
+
 
     
+
+
     
+}
+
+function throwCard(room,userIndex,cardThrown,payload) {
+
+    
+    if(cardThrown[0]=="s"){ // special card
+
+        if (cardThrown[1] =="4"){
+            room.db += 4; 
+
+        }else{
+            if (room.db > 0){ // the player has to withdraw some cards
+                withdrawNCards(room.db,room);
+            }
+            
+        }
+        room.cc = cardThrown + payload;
+        if (room.d){
+            room.ct -=1;
+            room.ct = (room.ct <0) ? 0 : room.ct;
+        }else{
+            room.ct +=1;
+            room.ct = (room.ct >= room.l.length) ? 0 : room.ct;
+        }
+
+
+        
+
+    }
+    
+}
+
+
+
+function withdrawNCards(n,room) {
+
+         for (let index = 0; index < n; index++) {
+
+            if (Math.random()>= 0.7){ // black card
+                if (Math.random()>= 0.5){ // +4
+                    room.pc[room.pc.length-1].push("s4");
+                }else{ //bc black color changer
+                    room.pc[room.pc.length-1].push("sc");
+                }
+            }else{
+
+                let random = Math.random();
+                
+                if (random <= 0.25){ //red
+
+                    room.pc[room.pc.length-1].push("r"+numberType());
+
+                }else if (random > 0.25 && random <= 0.5){ //yellow
+                    room.pc[room.pc.length-1].push("y"+numberType());
+
+                }else if (random > 0.5 && random <= 0.75){ // green
+                    room.pc[room.pc.length-1].push("g"+numberType());
+
+                }else{ // blue
+                    room.pc[room.pc.length-1].push("b"+numberType());
+
+                }
+             
+            }
+
+            
+            
+        }
 }
 function roomData(room,hashedIP){
 
