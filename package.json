@@ -1,0 +1,19 @@
+{
+  "name": "uno-backend",
+  "version": "1.0.0",
+  "description": "uno backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"nothing\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abody2k/uno-backend.git"
+  },
+  "author": "abody2k",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abody2k/uno-backend/issues"
+  },
+  "homepage": "https://github.com/abody2k/uno-backend#readme"
+}
