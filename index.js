@@ -123,18 +123,29 @@ io.on("connection",(client)=>{
     
     client.on("s",(roomID)=>{ // start the game
 
+        
         //set the current player turn in firebase to 0
         //let the other players know it started given this playerID
-        io.to(roomID).emit("s");
+        //start the game
+        rooms.get(roomID).g = 1;
+        console.log(rooms.get(roomID));
+        
+        io.to(roomID).emit("s","good");
 
 
 
-    })
+    });
 
 
     client.on("n",(data)=>{
 
-        // the data contains the card
+        // the data contains the card thrown or withdrawn
+
+        if (data[0]==0){ // withdraw a card
+
+        }else{ // throw a card
+
+        }
 
         //save it to firebase
         
@@ -145,20 +156,6 @@ io.on("connection",(client)=>{
         // current card and how many cards are in each player hand
 
 
-        switch (data[0]) {
-            case 'b': //it's a black card then the next value is either 4 or a new color
-
-                if (data[1]=='4'){
-
-                }else{
-
-                }
-                
-                break;
-        
-            default:
-                break;
-        }
 
     })
 })

@@ -7,7 +7,8 @@ export let room ={
     l:[], // league
     pi:[],//players hashed IPs
     p:[], // player name : number of cards
-    pc:[] //players cards, 
+    pc:[], //players cards, 
+    g:0, // game started 
 
 
 };
@@ -22,7 +23,7 @@ export function playerJoinsRoom(hashedIP,room,playerName) {
 
     const index = room.pi.indexOf(hashedIP);
     if (index >=0){
-        return [room.ct,room.d,room.cc,room.db,room.l,room.p,room.pc[index],index]; 
+        return [room.ct,room.d,room.cc,room.db,room.l,room.p,room.pc[index],index,room.g]; 
     }else{
         room.pi.push(hashedIP);
         room.l.push(0);
@@ -63,7 +64,7 @@ export function playerJoinsRoom(hashedIP,room,playerName) {
             
         }
 
-        return [room.ct,room.d,room.cc,room.db,room.l,room.p,room.pc[0],0];
+        return [room.ct,room.d,room.cc,room.db,room.l,room.p,room.pc[0],0,0];
 
 
     }
@@ -93,6 +94,13 @@ function numberType() {
     
 }
 
+
+
+function withdraw(room,userIndex) {
+
+    
+    
+}
 function roomData(room,hashedIP){
 
 
