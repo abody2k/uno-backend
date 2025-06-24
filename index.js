@@ -42,8 +42,15 @@ io.on("connection",(client)=>{
 
     client.on("mr",(userHash)=>{
         
-        console.log("user is trying to make a new room");
-        console.log(userHash);
+        //leave all other rooms
+
+        for (const room of client.rooms){
+            if (room != client.id){
+                client.leave(room)
+            }
+        }
+
+        
         
         
         //delete the room data of that user using his hash
@@ -53,7 +60,13 @@ io.on("connection",(client)=>{
             return
 
         client.join(userHash);
-        client.send("l")
+        client.send("l");
+        console.log("current rooms a user has joined : ");
+        
+        for (const room of client.rooms){
+            console.log(room);
+            
+        }
         
 
     })
