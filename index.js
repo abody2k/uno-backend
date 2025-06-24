@@ -101,6 +101,32 @@ io.on("connection",(client)=>{
 
 
     })
+
+
+    client.on("n",(data)=>{
+
+        // the data contains the card
+
+        //save it to firebase
+
+        //send it to the other players
+        io.to(client.rooms[1]).except(client.id).emit("n",data);
+        // switch (data[0]) {
+        //     case 'b': //it's a black card then the next value is either 4 or a new color
+
+        //         if (data[1]=='4'){
+
+        //         }else{
+
+        //         }
+                
+        //         break;
+        
+        //     default:
+        //         break;
+        // }
+
+    })
 })
 
 server.listen(3000,()=>{
