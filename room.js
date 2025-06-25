@@ -1,4 +1,7 @@
-export let room ={
+
+
+export function room() {
+    return  {
 
     ct: 0, //current turn
     d:0, // direction
@@ -12,6 +15,8 @@ export let room ={
 
 
 };
+
+}
 
 
 function doesAPlayerExist(room,hashedIP) {
@@ -64,7 +69,7 @@ export function playerJoinsRoom(hashedIP,room,playerName) {
             
         }
 
-        return [room.ct,room.d,room.cc,room.db,room.l,room.p,room.pc[0],0,0];
+        return [room.ct,room.d,room.cc,room.db,room.l,room.p,room.pc[0],room.pi.length-1,0];
 
 
     }
@@ -99,8 +104,13 @@ function numberType() {
 export function withdrawCard(room,userIndex) {
 
 
-    withdrawNCards(room.db + 1,room);
-    return [room.ct,room.d,room.db,room.cc,room.pc[userIndex],room.pc[userIndex].length];
+    let pc=withdrawNCardsUser(room.db + 1,room,userIndex);
+    console.log("new cards");
+    
+    console.log(pc);
+    
+    return [pc,room.pc[userIndex].length];
+    
 
     
 
@@ -118,7 +128,7 @@ export function throwCard(room,userIndex,cardThrown,payload) {
 
         }else{
             if (room.db > 0){ // the player has to withdraw some cards
-                withdrawNCards(room.db,room);
+                withdrawNCardsUser(room.db,room,userIndex);
             }
             
         }
@@ -139,10 +149,10 @@ export function throwCard(room,userIndex,cardThrown,payload) {
 
             if(cardThrown[0]==room.cc[room.cc[0]=="s" ? 2 : 0]){
 
-                handleCardThrowing(room,cardThrown);
+                handleCardThrowing(room,cardThrown,userIndex);
             }else{
                 if(cardThrown[1] == room.cc[1]){
-                handleCardThrowing(room,cardThrown);
+                handleCardThrowing(room,cardThrown,userIndex);
                 }
             }
 
@@ -194,6 +204,54 @@ function withdrawNCards(n,room) {
         }
         room.db =0;
 }
+
+function withdrawNCardsUser(n,room,userIndex) {
+
+    let pushedCards = [];
+         for (let index = 0; index < n; index++) {
+
+            if (Math.random()>= 0.7){ // black card
+                if (Math.random()>= 0.5){ // +4
+                    room.pc[userIndex].push("s4");
+                    pushedCards.push("s4");
+                }else{ //bc black color changer
+                    room.pc[userIndex].push("sc");
+                    pushedCards.push("sc");
+                }
+            }else{
+
+                let random = Math.random();
+                
+                if (random <= 0.25){ //red
+
+                    room.pc[userIndex].push("r"+numberType());
+                    
+                    pushedCards.push(room.pc[userIndex][room.pc[userIndex].length-1]);
+
+                }else if (random > 0.25 && random <= 0.5){ //yellow
+                    room.pc[userIndex].push("y"+numberType());
+                    pushedCards.push(room.pc[userIndex][room.pc[userIndex].length-1]);
+
+
+                }else if (random > 0.5 && random <= 0.75){ // green
+                    room.pc[userIndex].push("g"+numberType());
+                    pushedCards.push(room.pc[userIndex][room.pc[userIndex].length-1]);
+
+                }else{ // blue
+                    room.pc[userIndex].push("b"+numberType());
+                    pushedCards.push(room.pc[userIndex][room.pc[userIndex].length-1]);
+
+                }
+             
+            }
+
+            
+            
+        }
+        room.db =0;
+
+        return pushedCards;
+}
 function roomData(room,hashedIP){
 
 
@@ -214,7 +272,7 @@ function roomData(room,hashedIP){
 }
 
 
-function handleCardThrowing(room,cardThrown) {
+function handleCardThrowing(room,cardThrown,userIndex) {
                     if(cardThrown[1]=="+"){
                     room.db+=2;  
                 }else if (cardThrown[1]=="s"){
@@ -224,16 +282,16 @@ function handleCardThrowing(room,cardThrown) {
         }else{
             room.ct = Math.abs((room.ct+2)%room.l.length);
         }
-                withdrawNCards(room.db,room);
+                withdrawNCardsUser(room.db,room,userIndex);
                 return;
 
                 } else if(cardThrown[1]=="r"){
                 room.d = room.d == 0 ? 1 : 0;
                 
-                withdrawNCards(room.db,room);
+                withdrawNCardsUser(room.db,room,userIndex);
                 }
                 else{
-                withdrawNCards(room.db,room);
+                withdrawNCardsUser(room.db,room,userIndex);
 
                 }
                 room.cc = cardThrown;

@@ -30,15 +30,20 @@ io.on("connection",(client)=>{
     // client.send("u"+ generateUserId());
 
 
+    // const ip =
+    // client.handshake.headers['x-forwarded-for']?.split(',').shift() ||
+    // client.conn.remoteAddress;
+
     const ip =
-    client.handshake.headers['x-forwarded-for']?.split(',').shift() ||
-    client.conn.remoteAddress;
+    (Math.random()*1000).toString(20);
 
   console.log("User connected from IP:", ip);
   console.log(getIPHash(ip));
   //after getting the IP, store it on firebase in users and store it locally to identify each user with its socket
   //each time a user makes a new room the old data is purged
   client.send("i"+getIPHash(ip))
+    // client.send("i"+(Math.random()*19990).toString())
+
   
 
 
@@ -68,8 +73,17 @@ io.on("connection",(client)=>{
         client.join(userHash);
         let rroom = (rooms).get(userHash);
         let tempRoom ={};
-        
-        tempRoom = (!rroom) ? {...room} : rroom;
+                
+               console.log(tempRoom);
+               console.log(rroom);
+               
+
+               if(rroom == undefined){
+                tempRoom = room();
+               }else{
+                tempRoom = rroom;
+               }
+       console.log(tempRoom);
        
 
         let d = playerJoinsRoom(userHash,tempRoom,username);
@@ -139,17 +153,28 @@ io.on("connection",(client)=>{
 
     client.on("n",(data)=>{
 
+        console.log(data);
+        
         // the data contains the card thrown or withdrawn
 
         let d ;
         if (data[0]==0){ // withdraw a card
             d = withdrawCard(rooms.get(data[1]),data[2]);
+            client.send("u",d[0]); // u is an update regarding your new cards
+            io.to(data[1]).emit("u",d[1]); // letting all players know how many cards in the current player hand
+            return;
         }else{ // throw a card
+            console.log(data);
+            
             d = throwCard(rooms.get(data[1]),data[2],data[3],data[4]);
+            console.log(d);
+            
+            client.send("t",d[4]); // u is an update regarding your cards
+            io.to(data[1]).emit("t",d[0],d[1],d[2],d[3],d[5]);
+            return;
         }
 
-        client.send("u",d[4]); // u is an update regarding your cards
-            io.to(data[1]).emit("u",d[0],d[1],d[2],d[3],d[5]);
+        
         //save it to firebase
         
 
