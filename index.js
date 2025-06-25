@@ -150,7 +150,11 @@ io.on("connection",(client)=>{
 
     });
 
+    client.on("h",(roomID)=>{
 
+
+        io.to(roomID).emit("h");
+    })
     client.on("n",(data)=>{
 
         console.log(data);
@@ -171,6 +175,9 @@ io.on("connection",(client)=>{
             
             client.send("t",d[4]); // u is an update regarding your cards
             io.to(data[1]).emit("t",d[0],d[1],d[2],d[3],d[5]);
+            if(d[5]==0){
+                 io.to(data[1]).emit("ge",rooms.get(data[1]).l)
+            }
             return;
         }
 

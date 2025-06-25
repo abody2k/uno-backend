@@ -162,6 +162,9 @@ export function throwCard(room,userIndex,cardThrown,payload) {
     }
 
     room.pc[userIndex] = room.pc[userIndex].filter((a,i)=>i!=room.pc[userIndex].indexOf(cardThrown));
+    if(room.pc[userIndex].length==0){
+        room.l[userIndex]+=1;
+    }
     return [room.ct,room.d,room.db,room.cc,room.pc[userIndex],room.pc[userIndex].length];
     
 }
