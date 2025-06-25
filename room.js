@@ -96,9 +96,11 @@ function numberType() {
 
 
 
-function withdrawCard(room,userIndex) {
+export function withdrawCard(room,userIndex) {
 
 
+    withdrawNCards(room.db + 1,room);
+    return [room.ct,room.d,room.db,room.cc,room.pc[userIndex],room.pc[userIndex].length];
 
     
 
