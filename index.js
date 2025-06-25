@@ -15,7 +15,7 @@ function getIPHash(ip) {
 
 
 const { v4: uuidv4 } = require('uuid');
-const { room, playerJoinsRoom } = require("./room");
+const { room, playerJoinsRoom, throwCard } = require("./room");
 
 function generateUserId() {
   return uuidv4(); // returns a UUID v4
@@ -144,6 +144,7 @@ io.on("connection",(client)=>{
         if (data[0]==0){ // withdraw a card
 
         }else{ // throw a card
+            throwCard(rooms.get(data[1]),data[2],data[3]);
 
         }
 

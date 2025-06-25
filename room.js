@@ -106,7 +106,7 @@ function withdrawCard(room,userIndex) {
     
 }
 
-function throwCard(room,userIndex,cardThrown,payload) {
+export function throwCard(room,userIndex,cardThrown,payload) {
 
     
     if(cardThrown[0]=="s"){ // special card
@@ -132,7 +132,25 @@ function throwCard(room,userIndex,cardThrown,payload) {
 
         
 
+    }else{
+
+
+            if(cardThrown[0]==room.cc[room.cc[0]=="s" ? 2 : 0]){
+
+                handleCardThrowing(room,cardThrown);
+            }else{
+                if(cardThrown[1] == room.cc[1]){
+                handleCardThrowing(room,cardThrown);
+                }
+            }
+
+
+
+        
     }
+
+    room.pc[userIndex] = room.pc[userIndex].filter((a,i)=>i!=room.pc[userIndex].indexOf(cardThrown));
+    return [room.ct,room.d,room.db,room.cc,room.pc[userIndex],room.pc[userIndex].length];
     
 }
 
@@ -172,6 +190,7 @@ function withdrawNCards(n,room) {
             
             
         }
+        room.db =0;
 }
 function roomData(room,hashedIP){
 
@@ -190,4 +209,38 @@ function roomData(room,hashedIP){
 
 
     }
+}
+
+
+function handleCardThrowing(room,cardThrown) {
+                    if(cardThrown[1]=="+"){
+                    room.db+=2;  
+                }else if (cardThrown[1]=="s"){
+
+                if (room.d){
+            room.ct = Math.abs((room.ct-2)%room.l.length);
+        }else{
+            room.ct = Math.abs((room.ct+2)%room.l.length);
+        }
+                withdrawNCards(room.db,room);
+                return;
+
+                } else if(cardThrown[1]=="r"){
+                room.d = room.d == 0 ? 1 : 0;
+                
+                withdrawNCards(room.db,room);
+                }
+                else{
+                withdrawNCards(room.db,room);
+
+                }
+                room.cc = cardThrown;
+                if (room.d){
+            room.ct -=1;
+            room.ct = (room.ct <0) ? 0 : room.ct;
+        }else{
+            room.ct +=1;
+            room.ct = (room.ct >= room.l.length) ? 0 : room.ct;
+        }
+        room.cc = cardThrown;
 }
