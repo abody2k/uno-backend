@@ -144,7 +144,9 @@ io.on("connection",(client)=>{
         if (data[0]==0){ // withdraw a card
 
         }else{ // throw a card
-            throwCard(rooms.get(data[1]),data[2],data[3]);
+            let d = throwCard(rooms.get(data[1]),data[2],data[3]);
+            client.send("u",d[4]); // u is an update regarding your cards
+            io.to(data[1]).emit("u",d[0],d[1],d[2],d[3],d[5]);
 
         }
 
