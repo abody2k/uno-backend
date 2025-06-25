@@ -129,7 +129,7 @@ io.on("connection",(client)=>{
         //turn based on how many players joined before them
         let d = playerJoinsRoom(data[1],rooms.get(data[0]),data[2]);
         client.send("n",d) // n stands for info which contains the other players' names
-        io.to(data[0]).except(client.id).emit("p",rooms.get(data[0]).p.length,data[2])
+        io.to(data[0]).except(client.id).emit("p",rooms.get(data[0]).p)
 
 
 
