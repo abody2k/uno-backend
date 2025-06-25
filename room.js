@@ -72,7 +72,7 @@ export function playerJoinsRoom(hashedIP,room,playerName, socketID) {
             
         }
 
-        return [room.ct,room.d,room.cc,room.db,room.l,room.p,room.pc[0],room.pi.length-1,0];
+        return [room.ct,room.d,room.cc,room.db,room.l,room.p,room.pc[room.pi.length-1],room.pi.length-1,0];
 
 
     }
@@ -138,7 +138,7 @@ export function throwCard(room,userIndex,cardThrown,payload) {
         room.cc = cardThrown + payload;
         if (room.d){
             room.ct -=1;
-            room.ct = (room.ct <0) ? 0 : room.ct;
+            room.ct = (room.ct <0) ? room.l.length-1 : room.ct;
         }else{
             room.ct +=1;
             room.ct = (room.ct >= room.l.length) ? 0 : room.ct;
@@ -289,6 +289,7 @@ function handleCardThrowing(room,cardThrown,userIndex) {
             room.ct = Math.abs((room.ct+2)%room.l.length);
         }
                 withdrawNCardsUser(room.db,room,userIndex);
+                room.cc =cardThrown;
                 return;
 
                 } else if(cardThrown[1]=="r"){
@@ -303,10 +304,12 @@ function handleCardThrowing(room,cardThrown,userIndex) {
                 room.cc = cardThrown;
                 if (room.d){
             room.ct -=1;
-            room.ct = (room.ct <0) ? 0 : room.ct;
+            room.ct = (room.ct <0) ? room.l.length-1 : room.ct;
+            //  room.ct = Math.abs((room.ct-1)%room.l.length);
         }else{
             room.ct +=1;
             room.ct = (room.ct >= room.l.length) ? 0 : room.ct;
+            //  room.ct = Math.abs((room.ct+1)%room.l.length);
         }
         room.cc = cardThrown;
 }
