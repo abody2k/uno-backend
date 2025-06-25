@@ -307,3 +307,21 @@ function handleCardThrowing(room,cardThrown,userIndex) {
         }
         room.cc = cardThrown;
 }
+
+
+export function restartTheGame(room,roomID) {
+    
+    room.ct=0;
+    room.d=0;
+    room.db=0;
+    room.cc = "b4";
+    for (let i = 0; i < room.p.length; i++) {
+        room.p[i]= {[Object.keys(room.p[i])[0]]:0};
+    }
+    for (let i = 0; i < room.pc.length; i++) {
+
+        room.pc[i] = [];
+        withdrawNCardsUser(7,roomID,i);
+        
+    }
+}

@@ -15,7 +15,7 @@ function getIPHash(ip) {
 
 
 const { v4: uuidv4 } = require('uuid');
-const { room, playerJoinsRoom, throwCard, withdrawCard } = require("./room");
+const { room, playerJoinsRoom, throwCard, withdrawCard, restartTheGame } = require("./room");
 
 function generateUserId() {
   return uuidv4(); // returns a UUID v4
@@ -26,6 +26,8 @@ function generateUserId() {
 
 io.on("connection",(client)=>{
 
+
+    
     // //each player should have a unique ID stored on their device and is created upon starting the game
     // client.send("u"+ generateUserId());
 
@@ -192,6 +194,13 @@ io.on("connection",(client)=>{
 
 
 
+    });
+
+
+    client.on("rp",(roomID)=>{
+
+
+        restartTheGame(rooms.get(roomID),roomID);
     })
 })
 
