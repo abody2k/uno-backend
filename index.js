@@ -88,7 +88,7 @@ io.on("connection",(client)=>{
        console.log(tempRoom);
        
 
-        let d = playerJoinsRoom(userHash,tempRoom,username);
+        let d = playerJoinsRoom(userHash,tempRoom,username,client.id);
         (rooms).set(userHash,tempRoom);
 
         client.send("l",d);
@@ -129,9 +129,9 @@ io.on("connection",(client)=>{
         client.join(data[0]);
         //send the other players info to this player regarding their names, the player will decide their
         //turn based on how many players joined before them
-        let d = playerJoinsRoom(data[1],rooms.get(data[0]),data[2]);
+        let d = playerJoinsRoom(data[1],rooms.get(data[0]),data[2],client.id);
         client.send("n",d) // n stands for info which contains the other players' names
-        io.to(data[0]).except(client.id).emit("p",rooms.get(data[0]).p)
+        io.to(data[0]).except(client.id).emit("p",rooms.get(data[0]).p);
 
 
 
@@ -199,8 +199,16 @@ io.on("connection",(client)=>{
 
     client.on("rp",(roomID)=>{
 
-
-        restartTheGame(rooms.get(roomID),roomID);
+        let room = rooms.get(roomID);
+        restartTheGame(room,roomID);
+        for (let i = 0; i <room.i.length; i++) {
+            
+            io.sockets.sockets.get(room.i[i]).send("r",room.pc[i]);
+        }
+            console.log(room);
+            
+        
+        
     })
 })
 

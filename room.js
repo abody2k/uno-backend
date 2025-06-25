@@ -11,7 +11,8 @@ export function room() {
     pi:[],//players hashed IPs
     p:[], // player name : number of cards
     pc:[], //players cards, 
-    g:0, // game started 
+    g:0, // game started ,
+    i:[], // socket ids
 
 
 };
@@ -24,16 +25,18 @@ function doesAPlayerExist(room,hashedIP) {
 }
 
 
-export function playerJoinsRoom(hashedIP,room,playerName) {
+export function playerJoinsRoom(hashedIP,room,playerName, socketID) {
 
     const index = room.pi.indexOf(hashedIP);
     if (index >=0){
+        room.i[index]= socketID;
         return [room.ct,room.d,room.cc,room.db,room.l,room.p,room.pc[index],index,room.g]; 
     }else{
         room.pi.push(hashedIP);
         room.l.push(0);
         room.p.push({[playerName]:7});
         room.pc.push([]);
+        room.i.push(socketID);
         
 
         for (let index = 0; index < 7; index++) {
@@ -321,7 +324,7 @@ export function restartTheGame(room,roomID) {
     for (let i = 0; i < room.pc.length; i++) {
 
         room.pc[i] = [];
-        withdrawNCardsUser(7,roomID,i);
+        withdrawNCardsUser(7,room,i);
         
     }
 }
