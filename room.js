@@ -315,6 +315,7 @@ function handleCardThrowing(room,cardThrown,userIndex) {
 }
 
 
+
 export function restartTheGame(room,roomID) {
     
     room.ct=0;

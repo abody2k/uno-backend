@@ -6,7 +6,7 @@ let rooms = new Map();
 app.use(express.json())
 let io = require("socket.io")(server)
 
-
+app.use(express.static(__dirname+"/game"))
 const crypto = require("crypto");
 
 function getIPHash(ip) {
@@ -205,10 +205,39 @@ io.on("connection",(client)=>{
         
         
     })
+
+    client.on("disconnect",(d)=>{
+
+
+        console.log("a player left the game");
+        console.log(client.rooms);
+        
+        
+    })
 })
+
+
+
 
 server.listen(3000,()=>{
 
 
-    console.log("started a new server ")
+    console.log("started a new server ");
+
+
+
+    setInterval(() => {
+    rooms.forEach((key,value)=>{
+        console.log(value);
+        
+        io.in(value).fetchSockets().then((sockets)=>{
+
+            if (sockets.length==0){
+                rooms.delete(value);
+            }
+            
+        })
+        
+    })
+}, 60000 * 15);
 })
