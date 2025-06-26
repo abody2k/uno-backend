@@ -50,7 +50,6 @@ io.on("connection",(client)=>{
 
 
     client.on("mr",(data)=>{
-        console.log(data);
         
         let userHash = data[0];
         let username = data[1];
@@ -76,8 +75,7 @@ io.on("connection",(client)=>{
         let rroom = (rooms).get(userHash);
         let tempRoom ={};
                 
-               console.log(tempRoom);
-               console.log(rroom);
+        
                
 
                if(rroom == undefined){
@@ -85,7 +83,6 @@ io.on("connection",(client)=>{
                }else{
                 tempRoom = rroom;
                }
-       console.log(tempRoom);
        
 
         let d = playerJoinsRoom(userHash,tempRoom,username,client.id);
@@ -107,7 +104,6 @@ io.on("connection",(client)=>{
             }
         }
 
-        console.log(data);
         
         
         //read from data base all the other players info of this room
@@ -144,7 +140,6 @@ io.on("connection",(client)=>{
         //let the other players know it started given this playerID
         //start the game
         rooms.get(roomID).g = 1;
-        console.log(rooms.get(roomID));
         
         io.to(roomID).emit("s","good");
 
@@ -159,7 +154,6 @@ io.on("connection",(client)=>{
     })
     client.on("n",(data)=>{
 
-        console.log(data);
         
         // the data contains the card thrown or withdrawn
 
@@ -170,15 +164,17 @@ io.on("connection",(client)=>{
             io.to(data[1]).emit("u",d[1]); // letting all players know how many cards in the current player hand
             return;
         }else{ // throw a card
-            console.log(data);
             
             d = throwCard(rooms.get(data[1]),data[2],data[3],data[4]);
-            console.log(d);
             
             client.send("t",d[4]); // u is an update regarding your cards
-            io.to(data[1]).emit("t",d[0],d[1],d[2],d[3],d[5]);
+            
+            
             if(d[5]==0){
                  io.to(data[1]).emit("ge",rooms.get(data[1]).l)
+            }else{
+            io.to(data[1]).emit("t",d[0],d[1],d[2],d[3],d[5]);
+            console.log(d);
             }
             return;
         }
@@ -205,7 +201,6 @@ io.on("connection",(client)=>{
             
             io.sockets.sockets.get(room.i[i]).send("r",room.pc[i]);
         }
-            console.log(room);
             
         
         

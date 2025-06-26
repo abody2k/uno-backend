@@ -6,7 +6,7 @@ export function room() {
     ct: 0, //current turn
     d:0, // direction
     db:0, //debt
-    cc:"b4", // curent card
+    cc:"b7", // curent card
     l:[], // league
     pi:[],//players hashed IPs
     p:[], // player name : number of cards
@@ -108,9 +108,7 @@ export function withdrawCard(room,userIndex) {
 
 
     let pc=withdrawNCardsUser(room.db + 1,room,userIndex);
-    console.log("new cards");
     
-    console.log(pc);
     
     return [pc,room.pc[userIndex].length];
     
@@ -168,6 +166,8 @@ export function throwCard(room,userIndex,cardThrown,payload) {
     if(room.pc[userIndex].length==0){
         room.l[userIndex]+=1;
     }
+    console.log(room);
+    
     return [room.ct,room.d,room.db,room.cc,room.pc[userIndex],room.pc[userIndex].length];
     
 }
