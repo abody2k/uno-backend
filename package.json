@@ -4,7 +4,7 @@
   "description": "uno backend",
   "main": "index.js",
   "engines": {
-    "node": "20.x"
+    "node": "16.x"
   },
   "scripts": {
     "test": "echo \"nothing\"",
