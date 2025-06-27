@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "uno backend",
   "main": "index.js",
+  "engines": {
+    "node": "22.11.0"
+  },
   "scripts": {
-    "test": "echo \"nothing\""
+    "test": "echo \"nothing\"",
+    "start": "node index.js"
+    
   },
   "repository": {
     "type": "git",
