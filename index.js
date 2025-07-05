@@ -43,8 +43,8 @@ io.on("connection",(client)=>{
   console.log(getIPHash(ip));
   //after getting the IP, store it on firebase in users and store it locally to identify each user with its socket
   //each time a user makes a new room the old data is purged
-//   client.send("i"+getIPHash(ip))
-    client.send("i"+getIPHash((Math.random()*19990).toString()))
+  client.send("i"+getIPHash(ip))
+    // client.send("i"+getIPHash((Math.random()*19990).toString()))
 
   
 
